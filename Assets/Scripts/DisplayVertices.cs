@@ -9,11 +9,11 @@ public class DisplayVertices : MonoBehaviour
 {
     private Vector3[] vertices;
     [SerializeField]
-    private GameObject verticePrefab;
+    private GameObject verticePrefab = null;
     [SerializeField]
-    private Transform verticeParent;
+    private Transform verticeParent = null;
     [SerializeField]
-    private Button generateButton;
+    private Button generateButton = null;
 
     public void generateVertices()
     {
@@ -26,7 +26,8 @@ public class DisplayVertices : MonoBehaviour
         foreach(var vert in vertices)
         {
             color = new Color(1, vert.y / 4, 1, 1.0f);
-            GameObject sphere = Instantiate(verticePrefab, vert, Quaternion.identity, verticeParent);
+            GameObject sphere = Instantiate(verticePrefab, verticeParent.TransformPoint(vert), Quaternion.identity, verticeParent);
+            //sphere.transform.localPosition = vert;
             sphere.GetComponent<MeshRenderer>().material.color = color;
         }
     }
