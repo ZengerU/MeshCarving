@@ -6,11 +6,12 @@ public class Cursor : MonoBehaviour
 {
     [SerializeField]
     private float speed = .05f;
+    public bool carving = false;
     void Update()
     {
-        Vector3 tmp = transform.localPosition;
+        Vector3 tmp = transform.position;
         tmp.x += (Input.GetAxisRaw("Horizontal") * Time.deltaTime * speed);
-        tmp.y += (Input.GetAxisRaw("Vertical") * Time.deltaTime * speed);
-        transform.localPosition = tmp;
+        tmp.z += (Input.GetAxisRaw("Vertical") * Time.deltaTime * speed);
+        transform.position = tmp;
     }
 }

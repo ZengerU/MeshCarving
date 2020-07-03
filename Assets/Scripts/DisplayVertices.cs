@@ -12,8 +12,6 @@ public class DisplayVertices : MonoBehaviour
     private GameObject verticePrefab = null;
     [SerializeField]
     private Transform verticeParent = null;
-    [SerializeField]
-    private Button generateButton = null;
 
     public void generateVertices()
     {
@@ -23,17 +21,16 @@ public class DisplayVertices : MonoBehaviour
         }
         vertices = GetComponent<MeshFilter>().mesh.vertices;
         Color color = new Color(1, 0, 1, 1.0f);
-        foreach(var vert in vertices)
+        for(int i = 0; i < vertices.Length; i++)
         {
-            color = new Color(1, vert.y / 4, 1, 1.0f);
-            GameObject sphere = Instantiate(verticePrefab, verticeParent.TransformPoint(vert), Quaternion.identity, verticeParent);
-            //sphere.transform.localPosition = vert;
+            color = new Color(i, i, i, 1.0f);
+            GameObject sphere = Instantiate(verticePrefab, verticeParent.TransformPoint(vertices[i]), Quaternion.identity, verticeParent);
             sphere.GetComponent<MeshRenderer>().material.color = color;
         }
     }
-    public void showHideVertices()
+    private void Start()
     {
-        verticeParent.gameObject.SetActive(!verticeParent.gameObject.activeSelf);
-        generateButton.interactable = verticeParent.gameObject.activeSelf;
+        generateVertices();
+        //curs = GetComponent<Cursor>();
     }
 }

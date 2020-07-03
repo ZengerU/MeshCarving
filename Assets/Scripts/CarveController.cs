@@ -1,19 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CarveController : MonoBehaviour
 {
-    private LogCarver carv;
     [SerializeField]
-    private float mult = .1f;
-    private void OnTriggerStay(Collider other)
-    {
-        carv.CarveLog(transform.TransformPoint(new Vector3(-0.5f, 0, 0)), transform.TransformPoint(new Vector3(0.5f, 0, 0)), mult);
-    }
+    private float mult = .99f, timerStart =.5f;
+    private Bounds area;
+    [HideInInspector]
+    public int collidingObjectCount = 0;
+    private float timer = .5f;
     private void Start()
     {
-        carv = (LogCarver)FindObjectOfType(typeof(LogCarver));
-        print("test");
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        timer = timerStart;
+        area = GetComponent<MeshRenderer>().bounds;
+        other.GetComponent<LogCarver>().CarveLog(area, mult, Mathf.Abs(area.center.z) - area.extents.z);
+        print("enter trigger");
+        collidingObjectCount++;
+    }
+    private void Update()
+    {
+        timer -= Time.deltaTime;
     }
 }
