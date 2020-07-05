@@ -6,7 +6,7 @@ public class LogCarver : MonoBehaviour
     [SerializeField] private GameObject vertexPrefab, logPrefab;
     [SerializeField] private Transform logTosser;
     private const float CutOffset = .001f;
-    private const float MinDistance = .0009f;
+    private const float MinDistance = .006f;
 
     private Vector3 minPointWorld = new Vector3(float.MaxValue, 0, 0),
         maxPointWorld = new Vector3(float.MinValue, 0, 0),
@@ -34,7 +34,7 @@ public class LogCarver : MonoBehaviour
                 CutLog(bound.center.x - bound.extents.x, bound.center.x + bound.extents.x);
                 return;
             }
-
+            
             vertices[i].x *= multiplier;
             vertices[i].z *= multiplier;
             curs.speed = 0.001f;
@@ -100,10 +100,10 @@ public class LogCarver : MonoBehaviour
         var endPoint = parent.GetChild(parent.childCount - 1).GetComponent<LogCarver>().maxPointWorld.x;
         var leftSide = left - parent.GetChild(0).GetComponent<LogCarver>().minPointWorld.x;
         var rightSide = parent.GetChild(parent.childCount - 1).GetComponent<LogCarver>().maxPointWorld.x - right;
-        var tossRight = leftSide > rightSide;
-        print($"we are discarding the {(tossRight ? "right" : "left")} side");
+        var tossRight = leftSide >= rightSide;
+        print($"discarding the {(tossRight ? "right" : "left")} side");
         var center = new Vector3(tossRight ? (endPoint + rightSide) /2 : (startPoint + leftSide) /2, 0, 0);
-        //ThrowLog(center, tossRight);
+        ThrowLog(center, tossRight);
     }
 
     private void ThrowLog(Vector3 center, bool rightSide)
@@ -111,11 +111,34 @@ public class LogCarver : MonoBehaviour
         logTosser.rotation = Quaternion.identity;
         logTosser.position = center;
         var parent = transform.parent;
-        for (var i = transform.GetSiblingIndex(); i < parent.childCount - 1; i++)
+        if (rightSide)
         {
-            parent.GetChild(i).parent = logTosser;
+            while (transform.GetSiblingIndex() != parent.childCount -1)
+            {
+                parent.GetChild(parent.childCount - 1).parent = logTosser;
+            }
         }
-        logTosser.DOMove(new Vector3(10 * (rightSide ? 1 : -1), 10 * (rightSide ? 1 : -1), 0), 1);
+        else
+        {
+            while (transform.GetSiblingIndex() != 0)
+            {
+                parent.GetChild(0).parent = logTosser;
+            }
+
+            transform.parent = logTosser;
+        }
+
+
+        curs.stopped = true;
+        logTosser.DORotate(new Vector3(0, 0, rightSide ? -90 : 90), 1);
+        logTosser.DOMove(new Vector3((rightSide ? 3 : -3), 1 , 0), 2).OnComplete(() =>
+        {
+            curs.stopped = false; 
+            foreach (Transform child in logTosser)
+            {
+                Destroy(child.gameObject);
+            }
+        });
     }
     private void Start()
     {

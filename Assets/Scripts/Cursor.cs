@@ -6,7 +6,8 @@ public class Cursor : MonoBehaviour
     private float speedUpMultiplier = 1;
     public float speed = .05f;
     private float startSpeed, minX= float.MaxValue, maxX= float.MinValue;
-    [SerializeField] private Vector2 zBounds = new Vector2(-.11f, -.27f); 
+    [SerializeField] private Vector2 zBounds = new Vector2(-.11f, -.27f);
+    public bool stopped = false;
     private void Start()
     {
         startSpeed = speed;
@@ -15,6 +16,7 @@ public class Cursor : MonoBehaviour
 
     private void Update()
     {
+        if(stopped) return;
         speed += Time.deltaTime * speedUpMultiplier;
         speed = Mathf.Min(startSpeed, speed);
         var tmp = transform.position;
