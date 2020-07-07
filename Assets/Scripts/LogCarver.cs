@@ -20,7 +20,10 @@ public class LogCarver : MonoBehaviour
     public void CarveLog(Bounds bound, float multiplier, float dist)
     {
         //
-        // IMPORTANT TODO: remove multiplier. set vertex using the dist. It screws up performance.
+        // TODO: Add a start funcion. Index vertex rows on BST.
+        // TODO2: Add another start function. Index vertex columns on BST.
+        // TODO3: Remove "checkX" and "distance =>" check. Get the possible vertices based on BST results. Find vertices inside bounds. Use rows to modify symmetrically.
+        // Thought: Add some offset to colliders?
         // 
         var meshFilter = GetComponent<MeshFilter>();
         for (var i = 0; i < vertices.Length; i++)
