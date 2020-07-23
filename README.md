@@ -7,4 +7,4 @@ Clone the project into your system. Create Textures and Models folders inside th
 
 ### Demo
 
-![Farmers Market Finder Demo](carve.gif)
+![CarveGif](carve.gif)
